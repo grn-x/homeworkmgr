@@ -53,6 +53,8 @@ public class TimetableViewer extends JFrame {
             if (!(file == null)) {
                 Serializer.serializeObject(file.toString(), tableToNestedArray(timetable));
                 Main.SETTINGS.setTableLocation(file);
+                Popup.displayNotification(tPane, "Saved", 500);
+
             }
         });
 
