@@ -101,15 +101,18 @@ public class Main {
 		System.out.println("notes done");
 		
 		Settings.addAdditionalSettings("lol", "value");
+		Settings.addAdditionalSettings("lol1", "value");
+		Settings.addAdditionalSettings("lol2", "value");
+		Settings.addAdditionalSettings("lol3", "value");
 		
-        JFrame frame = new JFrame("Settings Frame");
-        JComponent com = Settings.getSettingsComponent();
-        frame.add(com);
-        frame.pack(); // Packs the components in the frame
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes the application when the frame is closed
-        frame.setVisible(true); // Makes the frame visible
+//        JFrame frame = new JFrame("Settings Frame");
+//        JComponent com = Settings.getSettingsComponent();
+//        frame.add(com);
+//        frame.pack(); // Packs the components in the frame
+//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes the application when the frame is closed
+//        frame.setVisible(true); // Makes the frame visible
    
-		//new Popup(NoteHandler.getTable(),randomDateTime);
+		new Popup(NoteHandler.getTable(),randomDateTime);
 
 		//HomeworkViewer v = new HomeworkViewer(NoteHandler.getNotesStringArray());
 

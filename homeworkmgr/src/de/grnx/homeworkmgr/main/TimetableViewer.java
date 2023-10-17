@@ -1,4 +1,3 @@
-//TODO: Table Resize Row / Y >:-(
 package de.grnx.homeworkmgr.main;
 
 import javax.swing.*;
@@ -8,22 +7,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.StringReader;
-import java.util.Arrays;
-import java.util.stream.IntStream;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.stream.IntStream;
 
 public class TimetableViewer extends JFrame {
     private JTable timetable;
     private JButton buttonSave;
     private JButton buttonLoad;
     private JButton buttonReset;
-//get table return /param TODO
+
     public TimetableViewer(String[][] arr) {
-    	JTabbedPane tPane = new JTabbedPane();
-    	JPanel panel2 = new JPanel();
-    	
-    	
+
+        JTabbedPane tPane = new JTabbedPane();
+
+        JPanel panel1 = new JPanel();
+
+        tPane.addTab("Schedule", panel1);
+        tPane.addTab("Settings", Settings.getSettingsComponent());
+
         setTitle("Timetable Viewer");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -32,13 +34,12 @@ public class TimetableViewer extends JFrame {
             public boolean getScrollableTracksViewportWidth() {
                 return getPreferredSize().width < getParent().getWidth();
             }
-            
         };
 
         JScrollPane scrollPane = new JScrollPane(timetable);
-        add(scrollPane, BorderLayout.CENTER);
+        panel1.setLayout(new BorderLayout());
+        panel1.add(scrollPane, BorderLayout.CENTER);
 
-        //loadCSVData(csvData);
         loadARRData(arr);
         timetable.getTableHeader().setReorderingAllowed(false);
 
@@ -46,52 +47,44 @@ public class TimetableViewer extends JFrame {
         buttonSave = new JButton("Save");
         buttonLoad = new JButton("Load");
         buttonReset = new JButton("Reset");
-        
-        buttonSave.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) { 
-        		  File file = FileHandler.saveFile(Settings.getTableLocation().getAbsolutePath(), new String[] {"ser"});
-        		  if(!(file==null)) {
-        			Serializer.serializeObject(file.toString(),tableToNestedArray(timetable));
-        			  	Main.SETTINGS.setTableLocation(file);
-        		  	}
 
+        buttonSave.addActionListener(e -> {
+            File file = FileHandler.saveFile(Settings.getTableLocation().getAbsolutePath(), new String[]{"ser"});
+            if (!(file == null)) {
+                Serializer.serializeObject(file.toString(), tableToNestedArray(timetable));
+                Main.SETTINGS.setTableLocation(file);
+            }
+        });
 
-        	  } 
-        	} );
-        
-        buttonLoad.addActionListener(new ActionListener() { 
-      	  public void actionPerformed(ActionEvent e) { 
-    		  File file = FileHandler.openFile(Settings.getTableLocation().getAbsolutePath(), new String[] {"ser"});
-    		  if(!(file==null)) {
-    			  loadARRData((String[][])Serializer.deserializeObject(file.toString()));
-  			  		Main.SETTINGS.setTableLocation(file);
-    		  }
-      	  } 
-      	} );
-        
-        buttonReset.addActionListener(new ActionListener() { 
-        	  public void actionPerformed(ActionEvent e) { 
-        		  	loadARRData(Timetable.timetableARR);
-        	 } 
-        	} );
-        
-        
+        buttonLoad.addActionListener(e -> {
+            File file = FileHandler.openFile(Settings.getTableLocation().getAbsolutePath(), new String[]{"ser"});
+            if (!(file == null)) {
+                loadARRData((String[][]) Serializer.deserializeObject(file.toString()));
+                Main.SETTINGS.setTableLocation(file);
+            }
+        });
+
+        buttonReset.addActionListener(e -> loadARRData(Timetable.timetableARR));
+
         // Create a panel for the buttons and add them
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1,3));
+        buttonPanel.setLayout(new GridLayout(1, 3));
         buttonPanel.add(buttonSave);
         buttonPanel.add(buttonLoad);
         buttonPanel.add(buttonReset);
 
-        // Add the button panel below the table
-        add(buttonPanel, BorderLayout.SOUTH);
-        
+        panel1.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(tPane);
+
         pack();
-        setSize((int)(1.5*timetable.getWidth()),timetable.getHeight()+4*buttonPanel.getHeight());
-        
         setLocationRelativeTo(null); // Center the frame on the screen
         setVisible(true);
     }
+
+
+
+
 
     
     private void loadARRData(String[][] arr) {
