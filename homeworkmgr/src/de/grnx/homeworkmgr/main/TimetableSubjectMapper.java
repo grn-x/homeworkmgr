@@ -133,11 +133,13 @@ public class TimetableSubjectMapper {// potentially unsafe method
 			//return table[index][dayOfWeek.getValue()];
 	        return returnTypes;
 
-		} catch (Exception e) {
+	        
+	        
+		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
 			new Thread(()->{
 			Thread t1 = new Thread(()->{
-				e.printStackTrace();
-				ErrView.showStackTraceErrorDialog(null, "Probably Array out of bounds exception", e);
+				//e.printStackTrace();
+				//ErrView.showStackTraceErrorDialog(null, "Probably Array out of bounds exception", e);
 				
 			});
 			Thread t2 = new Thread(()->{
@@ -195,6 +197,73 @@ public class TimetableSubjectMapper {// potentially unsafe method
 	        return returnTypes;
 			//return returnValue;
 
+	        
+	        
+		}catch(Exception e3) {
+			//every non arrayindex out of bounds
+
+			new Thread(()->{
+			Thread t1 = new Thread(()->{
+				//e.printStackTrace();
+				ErrView.showStackTraceErrorDialog(null, "Non Array Index out of Bounds Exceptiom: ", e3);
+				
+			});
+			/*Thread t2 = new Thread(()->{
+				Exception e2 = new Exception(Constants.dayOfWeekException,
+						new Throwable("Current day: " + dayOfWeek.name() + "\t Index:\t" + dayOfWeek.getValue()
+								+ "\n\nLast defined day in table: "
+								//+  table[0][table[index].length-1] 
+								+table[0][table[0].length - 1] + "\t Index:\t"
+								+ (table[0].length - 1)));
+				e2.printStackTrace();
+				ErrView.showStackTraceErrorDialog(null, "Exception", e2);
+			});
+						t2.run();*/
+			t1.run();
+			}).run();
+
+			
+			boolean invalidHour = false;
+			int dIndex = index;
+			String returnValue = table[index][table[index].length - 1];
+
+			if (returnValue == null||returnValue.isBlank() ){
+				invalidHour=true;
+				for (int i = index; i != 0; i--) {
+					returnValue = table[i][table[i].length - 1];
+					dIndex=i;
+					if (!(returnValue.isBlank() || returnValue == null)) {
+						//System.out.println(returnValue);
+						break;
+					}
+
+				}
+			}
+			
+			
+			
+			
+//			System.out.println(returnValue);
+//
+//			System.out.println(table[index][table[index].length - 1]);
+//			System.out.println(Arrays.toString(table[index]));
+//			System.out.println("\"" + table[index][table[index].length - 1] + "\"");
+			final int indexCopy = index;//Local variable statement defined in an enclosing scope must be final or effectively final. D-:<
+			returnTypes[0]=returnValue;
+			returnTypes[1]=dIndex;
+			for(String[] arr:table) {
+			//System.out.println("2nd\""+arr[indexCopy]+"\"");//dayOfWeekException
+			}
+	        returnTypes[2]=IntStream.range(0, table.length)//really length-1? TODO
+	                .mapToObj(i -> table[i][table[indexCopy].length - 1])
+	                .toArray(String[]::new);
+			returnTypes[3]=invalidHour;
+	        returnTypes[4]=index;
+	        
+	        
+	        return returnTypes;
+			//return returnValue;
+			
 		}
 
 	}
