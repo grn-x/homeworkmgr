@@ -25,7 +25,6 @@ public class Main {
 	public static volatile Settings SETTINGS;
 
 	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	//public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
 
 	public static void main(String[] args) {
