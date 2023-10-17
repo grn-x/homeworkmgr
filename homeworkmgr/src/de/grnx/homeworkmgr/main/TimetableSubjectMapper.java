@@ -37,7 +37,7 @@ public class TimetableSubjectMapper {// potentially unsafe method
 
 //	    
 //	    System.out.println("HEader: " +Arrays.toString(header));
-//	    System.out.println("table0: " +Arrays.toString(table[0]));
+//	    System.out.println("table0: " +Arrays.toString(table[0]));kle
 //
 //	    System.out.println(Arrays.toString(Arrays.copyOfRange(header, 0, table[0].length)));
 

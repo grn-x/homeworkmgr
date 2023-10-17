@@ -22,7 +22,7 @@ public class EnSt implements Serializable{
 		this.setStrSubject(subject);
 		this.setLocalDateTime(time);		
 		this.setStrNote(note);
-		this.setStatus("wip");
+		this.setStatus("Pending");
 
 	}
 	
@@ -87,7 +87,7 @@ public class EnSt implements Serializable{
 	
 	public String toString() {
 		
-		String str =this.strSubject +";"+this.LocalDateTime+";"+this.strNote;
+		String str =this.strSubject +";"+this.LocalDateTime+";"+this.strNote+";"+this.status;
 		
 		/*StringBuilder str = new StringBuilder();
 		str.append(this.strSubject);
@@ -101,11 +101,11 @@ public class EnSt implements Serializable{
 	}
 	
 	public Object[] toArray() {
-		return new Object[] {this.strSubject,getLocalDateTime(),this.strNote};
+		return new Object[] {this.strSubject,getLocalDateTime(),this.strNote,this.status};
 	}
 	
 	public String[] getStringArray() {
-		return new String[] {this.strSubject,this.LocalDateTime,this.strNote};
+		return new String[] {this.strSubject,this.LocalDateTime,this.strNote,this.status};
 	}
 	
 	private void readObject(ObjectInputStream inSt) throws ClassNotFoundException, IOException{
@@ -113,6 +113,7 @@ public class EnSt implements Serializable{
 		this.strSubject = inSt.readUTF();
 		this.LocalDateTime = inSt.readUTF();
 		this.strNote=inSt.readUTF();
+		this.status=inSt.readUTF();
 		
 	}
 	
@@ -120,6 +121,7 @@ public class EnSt implements Serializable{
 		outSt.writeUTF(this.strSubject);
 		outSt.writeUTF(this.LocalDateTime);
 		outSt.writeUTF(this.strNote);
+		outSt.writeUTF(this.status);
 	}
 
 

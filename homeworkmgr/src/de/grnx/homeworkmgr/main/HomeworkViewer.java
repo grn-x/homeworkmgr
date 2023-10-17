@@ -1,11 +1,14 @@
 package de.grnx.homeworkmgr.main;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.w3c.dom.traversal.DocumentTraversal;
 
@@ -28,6 +31,7 @@ public class HomeworkViewer extends JFrame {
         setTitle("Homework Viewer");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        
         setLayout(new BorderLayout());
         //add(this,BorderLayout.CENTER);
         
@@ -55,8 +59,11 @@ public class HomeworkViewer extends JFrame {
       			exList.add(new EnSt(
       				    table.getValueAt(i, 0) != null ? table.getValueAt(i, 0).toString() : "",
       				    		java.time.LocalDateTime.parse(table.getValueAt(i, 1)==null||table.getValueAt(i, 1).toString().isBlank()?LocalDateTime.now().format(Main.formatter).toString():table.getValueAt(i, 1).toString(), Main.formatter),
-      				    table.getValueAt(i, 2) != null ? table.getValueAt(i, 2).toString() : ""
+      				    table.getValueAt(i, 2) != null ? table.getValueAt(i, 2).toString() : "",
+      				    table.getValueAt(i,3) != null?table.getValueAt(i, 3).toString():"Pending"
       				));
+      			
+      				Popup.displayNotification(p, "Saved", 500);
       			  }catch (Exception e1) {
       				  	e1.printStackTrace();
       				  	ErrView.showStackTraceErrorDialog(null, "Error when saving Homework probably because date parsing error. Leave time cell empty for todays date", e1);
@@ -83,6 +90,13 @@ public class HomeworkViewer extends JFrame {
         for (Object[] rowData : arrList) {
             tableModel.addRow(rowData);
         }
+        
+        String[] statusOptions = {"Pending", "Completed", "In Progress"};
+        JComboBox<String> comboBox = new JComboBox<>(statusOptions);
+        comboBox.setEditable(true);
+        TableColumn statusColumn = table.getColumnModel().getColumn(3);
+        statusColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
