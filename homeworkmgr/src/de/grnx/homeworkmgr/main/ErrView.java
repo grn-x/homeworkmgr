@@ -19,7 +19,25 @@ import javax.swing.UIManager;
 
 public class ErrView {
     public static void showStackTraceErrorDialog(Component parentComponent, String title, Exception e) {
-    	
+    	switch (Main.FlatLafConfig) {
+		case 0: {
+			//skip for swing gui
+		}case 1: {
+			com.formdev.flatlaf.FlatDarkLaf.setup();
+			break;
+		}case 2: {
+			com.formdev.flatlaf.FlatIntelliJLaf.setup();
+			break;
+		}case 3: {
+			com.formdev.flatlaf.FlatDarculaLaf.setup();
+			break;
+		}case 4: {
+			com.formdev.flatlaf.FlatLightLaf.setup();
+			break;
+		}
+		default:
+//			com.formdev.flatlaf.FlatDarkLaf.setup();
+		}
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
@@ -48,14 +66,14 @@ public class ErrView {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setResizable(true);
 
-        ImageIcon errorIcon = (ImageIcon) UIManager.getIcon("OptionPane.errorIcon");
+//ImageIcon errorIcon = (ImageIcon) UIManager.getIcon("OptionPane.errorIcon");flatlfaferror
         JLabel titleLabel = new JLabel("Error : " + e.getMessage());
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
-        titlePanel.add(new JLabel(errorIcon));
+//titlePanel.add(new JLabel(errorIcon));flatlfaferror
         titlePanel.add(Box.createHorizontalStrut(10));
         titlePanel.add(titleLabel);
 

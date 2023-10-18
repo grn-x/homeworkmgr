@@ -21,7 +21,25 @@ public class Popup extends JFrame {
     private JTextArea textArea;
 
     public Popup(String [][] table,LocalDateTime now) {
-    	
+		switch (Main.FlatLafConfig) {
+		case 0: {
+			//skip for swing gui
+		}case 1: {
+			com.formdev.flatlaf.FlatDarkLaf.setup();
+			break;
+		}case 2: {
+			com.formdev.flatlaf.FlatIntelliJLaf.setup();
+			break;
+		}case 3: {
+			com.formdev.flatlaf.FlatDarculaLaf.setup();
+			break;
+		}case 4: {
+			com.formdev.flatlaf.FlatLightLaf.setup();
+			break;
+		}
+		default:
+//			com.formdev.flatlaf.FlatDarkLaf.setup();
+		}
     	//LocalDateTime now = LocalDateTime.now();
     	
     	Object[] objArr = TimetableSubjectMapper.Mapper(table, now);

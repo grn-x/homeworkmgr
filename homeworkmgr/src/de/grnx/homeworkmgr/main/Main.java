@@ -18,17 +18,48 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLaf;
+
 public class Main {
 	public static File FOLDER;
 	public static File CONFIG;
 	public static String propertiesPath;
 	public static volatile Settings SETTINGS;
+    public static boolean FlatDarkLafFlag = true;
+    public static int FlatLafConfig = 0;
+
 
 	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
 	public static void main(String[] args) {
-
+		
+		switch (FlatLafConfig) {
+		case 0: {
+			//skip for swing gui
+			FlatLaf.repaintAllFramesAndDialogs();
+			break;
+		}case 1: {
+			com.formdev.flatlaf.FlatDarkLaf.setup();
+			System.out.println("dark");
+			break;
+		}case 2: {
+			com.formdev.flatlaf.FlatIntelliJLaf.setup();
+			break;
+		}case 3: {
+			com.formdev.flatlaf.FlatDarculaLaf.setup();
+			break;
+		}case 4: {
+			com.formdev.flatlaf.FlatLightLaf.setup();
+			System.out.println("light");
+			break;
+		}
+		default:
+			//com.formdev.flatlaf.FlatDarkLaf.setup();
+		}
+		
 		String dataFolder = System.getenv("APPDATA");
 		File folder = new File(dataFolder + "\\.homeworkMGR");
 		File config = Paths.get(folder + "\\config.properties").toFile();

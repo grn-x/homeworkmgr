@@ -216,6 +216,25 @@ public class Settings {
 
     
     public Settings() {
+		switch (Main.FlatLafConfig) {
+		case 0: {
+			//skip for swing gui
+		}case 1: {
+			com.formdev.flatlaf.FlatDarkLaf.setup();
+			break;
+		}case 2: {
+			com.formdev.flatlaf.FlatIntelliJLaf.setup();
+			break;
+		}case 3: {
+			com.formdev.flatlaf.FlatDarculaLaf.setup();
+			break;
+		}case 4: {
+			com.formdev.flatlaf.FlatLightLaf.setup();
+			break;
+		}
+		default:
+//			com.formdev.flatlaf.FlatDarkLaf.setup();
+		}
         if (!(Main.CONFIG).exists()) {
             try {
                 Properties props = new Properties();

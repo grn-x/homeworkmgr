@@ -8,6 +8,7 @@ import java.io.File;
 public class FileHandler {
 
 	public static File openFile(String initialPath, String[] allowedExtensions) {
+		
 		if (!(initialPath == null)) {
 			initialPath = Main.FOLDER.toString();
 		}
