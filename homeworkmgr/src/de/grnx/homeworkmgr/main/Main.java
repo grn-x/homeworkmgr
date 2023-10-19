@@ -17,6 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -28,7 +29,7 @@ public class Main {
 	public static String propertiesPath;
 	public static volatile Settings SETTINGS;
     public static boolean FlatDarkLafFlag = true;
-    public static int FlatLafConfig = 0;
+    public static int FlatLafConfig = 1;
 
 
 	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -36,29 +37,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		switch (FlatLafConfig) {
-		case 0: {
-			//skip for swing gui
-			FlatLaf.repaintAllFramesAndDialogs();
-			break;
-		}case 1: {
-			com.formdev.flatlaf.FlatDarkLaf.setup();
-			System.out.println("dark");
-			break;
-		}case 2: {
-			com.formdev.flatlaf.FlatIntelliJLaf.setup();
-			break;
-		}case 3: {
-			com.formdev.flatlaf.FlatDarculaLaf.setup();
-			break;
-		}case 4: {
-			com.formdev.flatlaf.FlatLightLaf.setup();
-			System.out.println("light");
-			break;
-		}
-		default:
-			//com.formdev.flatlaf.FlatDarkLaf.setup();
-		}
+		
 		
 		String dataFolder = System.getenv("APPDATA");
 		File folder = new File(dataFolder + "\\.homeworkMGR");
@@ -75,6 +54,13 @@ public class Main {
 		CONFIG = config;
 
 		SETTINGS = new Settings();
+		if(Settings.getAdditionalSettings("Appearance(int 0-4)")==null||Settings.getAdditionalSettings("Appearance(int 0-4)").isBlank()) {
+			Settings.addAdditionalSettings("Appearance(int 0-4)", "1");
+		}else {
+			Settings.addAdditionalSettings("Appearance(int 0-4)", Settings.getAdditionalSettings("Appearance(int 0-4)"));
+			FlatLafConfig = Integer.parseInt(Settings.getAdditionalSettings("Appearance(int 0-4)"));
+
+		}
 
 		/*
 		 * Serializer.serializeData(new EnSt(),
@@ -100,7 +86,7 @@ public class Main {
 		//
 //	        LocalDateTime customLocalDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
-		int year = 1989;
+		/*int year = 1989;
 		Month month = Month.APRIL;
 		int weekOfMonth = 1; // Week of the month (e.g., 1st, 2nd, 3rd, etc.)
 		DayOfWeek dayOfWeek = DayOfWeek.SUNDAY; // Day of the week
@@ -134,7 +120,7 @@ public class Main {
 		Settings.addAdditionalSettings("lol", "value");
 		Settings.addAdditionalSettings("lol1", "value");
 		Settings.addAdditionalSettings("lol2", "value");
-		Settings.addAdditionalSettings("lol3", "value");
+		Settings.addAdditionalSettings("lol3", "value");*/
 		
 //        JFrame frame = new JFrame("Settings Frame");
 //        JComponent com = Settings.getSettingsComponent();
@@ -142,8 +128,31 @@ public class Main {
 //        frame.pack(); // Packs the components in the frame
 //        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes the application when the frame is closed
 //        frame.setVisible(true); // Makes the frame visible
-   
-		new Popup(NoteHandler.getTable(),randomDateTime);
+		switch (Main.FlatLafConfig) {
+		case 0: {
+			//skip for swing gui
+			FlatLaf.repaintAllFramesAndDialogs();
+			break;
+		}case 1: {
+			com.formdev.flatlaf.FlatDarkLaf.setup();
+			 System.out.println("dark");
+			break;
+		}case 2: {
+			com.formdev.flatlaf.FlatLightLaf.setup();
+
+			break;
+		}case 3: {
+			com.formdev.flatlaf.FlatDarculaLaf.setup();
+			break;
+		}case 4: {
+			com.formdev.flatlaf.FlatIntelliJLaf.setup();
+			System.out.println("light");
+			break;
+		}
+		default:
+			//com.formdev.flatlaf.FlatDarkLaf.setup();
+		}
+		new Popup(NoteHandler.getTable(),LocalDateTime.now());
 
 		//HomeworkViewer v = new HomeworkViewer(NoteHandler.getNotesStringArray());
 
@@ -151,7 +160,17 @@ public class Main {
 
 		// new TimetableViewer(Timetable.timetableARR);
 
-//		File openFile = FileHandler.openFile(null, null);
+//		try {
+//			FileHandler.openFile(System.getenv("Appdata"), new String[] {"ser", "dat", "lol"}).createNewFile();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+		
+		
+		
 //        if (openFile != null) {
 //            // Process the opened file
 //            System.out.println("Opened file: " + openFile.getAbsolutePath());

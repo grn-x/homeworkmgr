@@ -8,7 +8,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -16,6 +20,8 @@ import javax.swing.table.TableColumn;
 import org.w3c.dom.traversal.DocumentTraversal;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -33,25 +39,7 @@ public class HomeworkViewer extends JFrame {
     private DefaultTableModel tableModel;
 
     public HomeworkViewer(ArrayList<Object[]> arrList) {
-		switch (Main.FlatLafConfig) {
-		case 0: {
-			//skip for swing gui
-		}case 1: {
-			com.formdev.flatlaf.FlatDarkLaf.setup();
-			break;
-		}case 2: {
-			com.formdev.flatlaf.FlatIntelliJLaf.setup();
-			break;
-		}case 3: {
-			com.formdev.flatlaf.FlatDarculaLaf.setup();
-			break;
-		}case 4: {
-			com.formdev.flatlaf.FlatLightLaf.setup();
-			break;
-		}
-		default:
-//			com.formdev.flatlaf.FlatDarkLaf.setup();
-		}
+
         setTitle("Homework Viewer");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -101,6 +89,7 @@ public class HomeworkViewer extends JFrame {
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 
+        
         for (Object[] rowData : arrList) {
             tableModel.addRow(rowData);
         }
@@ -144,7 +133,7 @@ public class HomeworkViewer extends JFrame {
         table.getSelectionModel().addListSelectionListener(selectionListener);
     
 
-        
+        table.getColumnModel().getColumn(0).setCellRenderer(new CustomCellRenderer());
         
         
         table.getColumnModel().getColumn(2).setCellRenderer(tableCellRenderer);
@@ -197,7 +186,8 @@ public class HomeworkViewer extends JFrame {
         
         
         
-        
+//        UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+//        defaults.put("Table.alternateRowColor", new ColorUIResource(Color.LIGHT_GRAY));
         
         
         JScrollPane scrollPane = new JScrollPane(table);
@@ -206,7 +196,52 @@ public class HomeworkViewer extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+    
+    static class CustomCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+            
+                Color color1, color2;
+
+                // Define color combinations based on the integer value
+                switch (Main.FlatLafConfig) {
+                    case 0:
+                        color1 = Color.WHITE;
+                        color2 = Color.BLACK;
+                        break;
+                    case 1:
+                        color1 = Color.RED;
+                        color2 = Color.YELLOW;
+                        break;
+                    case 2:
+                        color1 = Color.BLUE;
+                        color2 = Color.CYAN;
+                        break;
+                    case 3:
+                        color1 = Color.GREEN;
+                        color2 = Color.MAGENTA;
+                        break;
+                    case 4:
+                        color1 = Color.ORANGE;
+                        color2 = Color.PINK;
+                        break;
+                    default:
+                        color1 = Color.WHITE;
+                        color2 = Color.BLACK;
+                
+
+                if (row % 2 == 0) {
+                    c.setBackground(color1);
+                } else {
+                    c.setBackground(color2);
+                }
+            }
+            return c;
+        }
+    }
+    
     private Object[] getRowData(int rowIndex) {
         Vector<?> rowData = (Vector<?>) tableModel.getDataVector().elementAt(rowIndex);
         return rowData.toArray();
@@ -251,5 +286,6 @@ public class HomeworkViewer extends JFrame {
 		  Serializer.serializeObject(Settings.getDataLocation().getAbsolutePath(),(Object)exList);
 
     }
+    
     
 }

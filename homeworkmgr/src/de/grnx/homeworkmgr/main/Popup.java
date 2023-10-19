@@ -21,27 +21,7 @@ public class Popup extends JFrame {
     private JTextArea textArea;
 
     public Popup(String [][] table,LocalDateTime now) {
-		switch (Main.FlatLafConfig) {
-		case 0: {
-			//skip for swing gui
-		}case 1: {
-			com.formdev.flatlaf.FlatDarkLaf.setup();
-			break;
-		}case 2: {
-			com.formdev.flatlaf.FlatIntelliJLaf.setup();
-			break;
-		}case 3: {
-			com.formdev.flatlaf.FlatDarculaLaf.setup();
-			break;
-		}case 4: {
-			com.formdev.flatlaf.FlatLightLaf.setup();
-			break;
-		}
-		default:
-//			com.formdev.flatlaf.FlatDarkLaf.setup();
-		}
-    	//LocalDateTime now = LocalDateTime.now();
-    	
+
     	Object[] objArr = TimetableSubjectMapper.Mapper(table, now);
     	String subject = (String) objArr[0];
     	int selectedIndex = (int) objArr[1]-1;
@@ -281,6 +261,8 @@ public class Popup extends JFrame {
         Point parentLocation = parent.getLocationOnScreen();
         int x = parentLocation.x + (parent.getWidth() - dialog.getWidth()) / 2;
         int y = parentLocation.y + (parent.getHeight() - dialog.getHeight()) / 2;
+        if(parent!=null)parent.requestFocus();
+        
         dialog.setLocation(x, y);
 
         new Thread(() -> {
