@@ -139,6 +139,42 @@ public class HomeworkViewer extends JFrame {
         table.getColumnModel().getColumn(2).setCellRenderer(tableCellRenderer);
         table.getSelectionModel().addListSelectionListener(selectionListener);
 
+        
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+        {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+            {
+                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setBackground(row % 2 == 0 ? Color.DARK_GRAY : Color.BLUE);
+//                c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+                return c;
+            }
+        });
+        
+/*
+table.setDefaultRenderer(Object.class, new TableCellRenderer() {
+    private final Color evenColor = new Color(220, 220, 220);
+    private final Color oddColor = Color.WHITE;
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component component = table.getDefaultRenderer(Object.class).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+        if (!isSelected) {
+            if (row % 2 == 0) {
+                component.setBackground(evenColor);
+            } else {
+                component.setBackground(oddColor);
+            }
+        }
+
+        return component;
+    }
+});*/
+        
+        
+        
         textArea.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -195,6 +231,7 @@ public class HomeworkViewer extends JFrame {
         setSize(600, 400);
         setLocationRelativeTo(null);
         setVisible(true);
+
     }
     
     static class CustomCellRenderer extends DefaultTableCellRenderer {
