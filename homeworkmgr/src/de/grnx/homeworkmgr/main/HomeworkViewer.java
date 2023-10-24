@@ -1,20 +1,42 @@
 package de.grnx.homeworkmgr.main;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.accessibility.Accessible;
+import javax.swing.*;
+import javax.swing.plaf.basic.ComboPopup;
+import javax.accessibility.Accessible;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -25,6 +47,8 @@ import org.w3c.dom.traversal.DocumentTraversal;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -33,14 +57,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class HomeworkViewer extends JFrame {
-    private JTable table;
+    public static JTable table;
     private DefaultTableModel tableModel;
     private JComboBox<String> dropdown;
     private HashSet<String> options;
@@ -86,13 +115,18 @@ public class HomeworkViewer extends JFrame {
         
         
         JPanel p = new JPanel();
-        p.setLayout(new GridLayout(1,2));
+        p.setLayout(new GridLayout(1,3));
         
         JButton saveButton = new JButton("Save Homework");
         
         JButton addColButton = new JButton("Add Homework");
         p.add(saveButton);
         p.add(addColButton);
+        
+        
+        
+        p.add(new CheckedComboBox<>(makeModel()));
+        
         
         JPanel btnfieldPanel = new JPanel();
        
@@ -127,14 +161,11 @@ public class HomeworkViewer extends JFrame {
             	int row = table.getSelectedRow();
             	int col = table.getSelectedColumn();
             		//updateSelectedCell(textAreaF.getText());
-            	if(table.getCellEditor()!=null){
-            	table.getCellEditor().cancelCellEditing();
-            	}
+            	if(table.getCellEditor()!=null)table.getCellEditor().cancelCellEditing();
             	
             	table.setValueAt(textAreaF.getText()!=null?textAreaF.getText():"", row, 2);
             	;
-            	System.out.println(table.getValueAt(row, 2));
-            		System.out.println("typed");
+
             		
             		
                 if ((e.isShiftDown() || e.isControlDown() || e.isAltDown() || e.isMetaDown()) && e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -214,7 +245,7 @@ public class HomeworkViewer extends JFrame {
                     @Override
                     public void keyTyped(KeyEvent e) {
                         // Your logic here when a key is typed in the text area
-                        System.out.println("Key typed in the note cell.");
+
                         	
                         
                         textAreaF.setText((textArea.getText() != null) ? textArea.getText().toString() : "");
@@ -225,7 +256,7 @@ public class HomeworkViewer extends JFrame {
                     @Override
                     public void keyPressed(KeyEvent e) {
                         // Your logic here when a key is pressed in the text area
-                        System.out.println("Key pressed in the note cell.");
+
 
 
                         if ((e.isShiftDown() || e.isControlDown() || e.isAltDown() || e.isMetaDown()) && e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -238,6 +269,9 @@ public class HomeworkViewer extends JFrame {
                             if (selectedRow >= 0 && selectedRow < tableModel.getRowCount()) {
                                 tableModel.setValueAt(textAreaF.getText(), selectedRow, 2);
                                 
+                                
+                            	if(table.getCellEditor()!=null)table.getCellEditor().cancelCellEditing();
+
                                 saveHomeworkState(table);
 
                             }
@@ -248,7 +282,7 @@ public class HomeworkViewer extends JFrame {
                     @Override
                     public void keyReleased(KeyEvent e) {
                         // Your logic here when a key is released in the text area
-                        System.out.println("Key released in the note cell.");
+
                     }
                 });
 
@@ -426,6 +460,201 @@ public class HomeworkViewer extends JFrame {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(updatedOptions);
         dropdown.setModel(model);
     }
+    
+    
+
+    
+//
+//	  private ExampleComboBox() {
+//		    super(new BorderLayout());
+//		    JPanel p = new JPanel(new GridLayout(0, 1));
+//		    p.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+//		    p.add(new JLabel("CheckedComboBox:"));
+//		    p.add(new CheckedComboBox<>(makeModel()));
+//		    add(p, BorderLayout.NORTH);
+//		    setPreferredSize(new Dimension(320, 240));
+//		  }
+
+private static ComboBoxModel<CheckableItem> makeModel() {
+ /* CheckableItem[] m = {
+      new CheckableItem("aaa", false),
+      new CheckableItem("bb", false),
+      new CheckableItem("111", false),
+      new CheckableItem("33333", false),
+      new CheckableItem("2222", false),
+      new CheckableItem("c", false)
+  };*/
+	  Set<Object> h = new HashSet<>();
+	    IntStream.range(0, table.getRowCount())
+	        .mapToObj(i -> table.getValueAt(i, table.getColumnCount()-1))
+	        .forEach(h::add);
+
+	    CheckableItem[] m = h.stream()
+	        .map(obj -> new CheckableItem(obj.toString(), true))
+	        .toArray(CheckableItem[]::new);
+
+	    return new DefaultComboBoxModel<>(m);
+	}
+
+
+
+private static void createAndShowGui() {
+  JFrame frame = new JFrame("@title@");
+  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+  //frame.getContentPane().add(new ExampleComboBox());
+  frame.pack();
+  frame.setLocationRelativeTo(null);
+  frame.setVisible(true);
+}
+}
+
+class CheckableItem {
+private final String text;
+private boolean selected;
+
+protected CheckableItem(String text, boolean selected) {
+  this.text = text;
+  this.selected = selected;
+}
+
+public boolean isSelected() {
+  return selected;
+}
+
+public void setSelected(boolean selected) {
+  this.selected = selected;
+}
+
+@Override
+public String toString() {
+  return text;
+}
+}
+
+class CheckedComboBox<E extends CheckableItem> extends JComboBox<E> {
+protected boolean keepOpen;
+private final JPanel panel = new JPanel(new BorderLayout());
+
+
+@Override
+public void setPopupVisible(boolean v) {
+    if (keepOpen) {
+        keepOpen = false;
+    } else {
+        if (v && !isPopupVisible() && getUI().isPopupVisible(this)) {
+            // This is the modification for making the combo box open upwards
+            int popupHeight = getUI().getPopupBounds(this).height;
+            int comboBoxHeight = getBounds().height;
+            showPopup(0, -popupHeight + comboBoxHeight);
+        } else {
+            super.setPopupVisible(v);
+        }
+    }
+}
+
+
+/*
+ * @Override
+public void setPopupVisible(boolean v) {
+  if (keepOpen) {
+    keepOpen = false;
+  } else {
+    super.setPopupVisible(v);
+  }
+}
+ */
+
+protected CheckedComboBox(ComboBoxModel<E> model) {
+	
+  super(model);
+}
+
+@Override
+public Dimension getPreferredSize() {
+  return new Dimension(200, 20);
+}
+
+@Override
+public void updateUI() {
+  setRenderer(null);
+  super.updateUI();
+  Accessible a = getAccessibleContext().getAccessibleChild(0);
+  if (a instanceof ComboPopup) {
+    ((ComboPopup) a).getList().addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+        JList<?> list = (JList<?>) e.getComponent();
+        if (SwingUtilities.isLeftMouseButton(e)) {
+          keepOpen = true;
+          updateItem(list.locationToIndex(e.getPoint()));
+        }
+      }
+    });
+  }
+
+  DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+  JCheckBox check = new JCheckBox();
+  check.setOpaque(false);
+  setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+    panel.removeAll();
+    Component c = renderer.getListCellRendererComponent(
+        list, value, index, isSelected, cellHasFocus);
+    if (index < 0) {
+      String txt = getCheckedItemString(list.getModel());
+      JLabel l = (JLabel) c;
+      l.setText(txt.isEmpty() ? " " : txt);
+      l.setOpaque(false);
+      l.setForeground(list.getForeground());
+      panel.setOpaque(false);
+    } else {
+      check.setSelected(value.isSelected());
+      panel.add(check, BorderLayout.WEST);
+      panel.setOpaque(true);
+      panel.setBackground(c.getBackground());
+    }
+    panel.add(c);
+    return panel;
+  });
+  initActionMap();
+}
+
+protected void initActionMap() {
+  KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
+  getInputMap(WHEN_FOCUSED).put(ks, "checkbox-select");
+  getActionMap().put("checkbox-select", new AbstractAction() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Accessible a = getAccessibleContext().getAccessibleChild(0);
+      if (a instanceof ComboPopup) {
+        updateItem(((ComboPopup) a).getList().getSelectedIndex());
+      }
+    }
+  });
+}
+
+protected void updateItem(int index) {
+  if (isPopupVisible() && index >= 0) {
+    E item = getItemAt(index);
+    item.setSelected(!item.isSelected());
+    setSelectedIndex(-1);
+    setSelectedItem(item);
+  }
+}
+
+
+
+protected static <E extends CheckableItem> String getCheckedItemString(ListModel<E> model) {
+  return IntStream.range(0, model.getSize())
+      .mapToObj(model::getElementAt)
+      .filter(CheckableItem::isSelected)
+      .map(Objects::toString)
+      .sorted()
+      .collect(Collectors.joining(", "));
+}
+    
+    
+    
+    
 }
 
 
