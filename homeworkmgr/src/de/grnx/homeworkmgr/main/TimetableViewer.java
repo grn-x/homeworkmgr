@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.stream.IntStream;
 
-public class TimetableViewer extends JFrame {
+//public class TimetableViewer extends JFrame {
+public class TimetableViewer extends JPanel {
     private JTable timetable;
     private JButton buttonSave;
     private JButton buttonLoad;
@@ -24,10 +25,9 @@ public class TimetableViewer extends JFrame {
         JPanel panel1 = new JPanel();
 
         tPane.addTab("Schedule", panel1);
-        tPane.addTab("Settings", Settings.getSettingsComponent());
 
-        setTitle("Timetable Viewer");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //setTitle("Timetable Viewer");
+//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         timetable = new JTable() {
             @Override
@@ -77,10 +77,18 @@ public class TimetableViewer extends JFrame {
 
         panel1.add(buttonPanel, BorderLayout.SOUTH);
 
-        add(tPane);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                // Implement resizing behavior here if necessary
+                revalidate();
+                repaint();
+            }
+        });
+        
+        add(panel1);
 
-        pack();
-        setLocationRelativeTo(null); // Center the frame on the screen
+//        pack();
+//        setLocationRelativeTo(null); // Center the frame on the screen
         setVisible(true);
     }
 

@@ -152,6 +152,9 @@ public class Main {
 		default:
 			//com.formdev.flatlaf.FlatDarkLaf.setup();
 		}
+		
+		
+		
 		new Popup(NoteHandler.getTable(),LocalDateTime.now());
 
 		//HomeworkViewer v = new HomeworkViewer(NoteHandler.getNotesStringArray());

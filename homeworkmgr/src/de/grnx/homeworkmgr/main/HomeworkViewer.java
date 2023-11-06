@@ -35,6 +35,8 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -68,7 +70,8 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class HomeworkViewer extends JFrame {
+//public class HomeworkViewer extends JFrame {
+public class HomeworkViewer extends JPanel {
     public static JTable table;
     private DefaultTableModel tableModel;
     private JComboBox<String> dropdown;
@@ -77,8 +80,8 @@ public class HomeworkViewer extends JFrame {
     
     public HomeworkViewer(ArrayList<Object[]> arrList) {
 
-        setTitle("Homework Viewer");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        setTitle("Homework Viewer");
+//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         
         setLayout(new BorderLayout());
@@ -96,8 +99,7 @@ public class HomeworkViewer extends JFrame {
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
 
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         
         for (Object[] rowData : arrList) {
             tableModel.addRow(rowData);
@@ -141,7 +143,7 @@ public class HomeworkViewer extends JFrame {
         textAreaF.setWrapStyleWord(true);
         //add(textArea, BorderLayout.NORTH);
         btnfieldPanel.setLayout(new BorderLayout());
-        btnfieldPanel.add(p, BorderLayout.SOUTH);
+        btnfieldPanel.add(p, BorderLayout.NORTH);
         btnfieldPanel.add(textAreaF, BorderLayout.CENTER);
         
         add(btnfieldPanel,BorderLayout.SOUTH);
@@ -332,9 +334,11 @@ public class HomeworkViewer extends JFrame {
         
         
         JScrollPane scrollPane = new JScrollPane(table);
+        table.setPreferredScrollableViewportSize(new Dimension(600, 400));
+        scrollPane.setPreferredSize(new Dimension(600, 400));
         add(scrollPane, BorderLayout.CENTER);
-        setSize(600, 400);
-        setLocationRelativeTo(null);
+//        setSize(600, 400);
+//        setLocationRelativeTo(null);
         setVisible(true);
         
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -536,25 +540,8 @@ protected boolean keepOpen;
 private final JPanel panel = new JPanel(new BorderLayout());
 
 
-@Override
-public void setPopupVisible(boolean v) {
-    if (keepOpen) {
-        keepOpen = false;
-    } else {
-        if (v && !isPopupVisible() && getUI().isPopupVisible(this)) {
-            // This is the modification for making the combo box open upwards
-            int popupHeight = getUI().getPopupBounds(this).height;
-            int comboBoxHeight = getBounds().height;
-            showPopup(0, -popupHeight + comboBoxHeight);
-        } else {
-            super.setPopupVisible(v);
-        }
-    }
-}
 
-
-/*
- * @Override
+  @Override
 public void setPopupVisible(boolean v) {
   if (keepOpen) {
     keepOpen = false;
@@ -562,7 +549,7 @@ public void setPopupVisible(boolean v) {
     super.setPopupVisible(v);
   }
 }
- */
+ 
 
 protected CheckedComboBox(ComboBoxModel<E> model) {
 	
@@ -600,7 +587,8 @@ public void updateUI() {
     Component c = renderer.getListCellRendererComponent(
         list, value, index, isSelected, cellHasFocus);
     if (index < 0) {
-      String txt = getCheckedItemString(list.getModel());
+    	String txt = getCheckedItemString(list.getModel()); 
+      //String txt = "Visibility";
       JLabel l = (JLabel) c;
       l.setText(txt.isEmpty() ? " " : txt);
       l.setOpaque(false);
@@ -638,6 +626,8 @@ protected void updateItem(int index) {
     item.setSelected(!item.isSelected());
     setSelectedIndex(-1);
     setSelectedItem(item);
+    System.out.println("combobox action");
+
   }
 }
 

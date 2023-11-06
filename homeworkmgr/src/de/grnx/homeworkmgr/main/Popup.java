@@ -112,34 +112,77 @@ public class Popup extends JFrame {
         westPanel.add(textareaButton);
         westPanel.add(aSubject);
         //replace both buttons with jtabbed panes maybe
-        JButton homeworkButton = new JButton("View Homework");
-        JButton tableButton = new JButton("Edit Schedule");
-        
-        homeworkButton.addActionListener(new ActionListener(){ 
-      	  public void actionPerformed(ActionEvent e){ 
-      		HomeworkViewer v = new HomeworkViewer(NoteHandler.getNotesStringArray());
-      		  
-      	  }});
-        tableButton.addActionListener(new ActionListener(){ 
-        	  public void actionPerformed(ActionEvent e){ 
-        		  new TimetableViewer(table);
-        		  //new TimetableViewer(NoteHandler.getTable());
-        	  }});
         
         
-        eastPanel.setLayout(new GridLayout(1,2));
-        eastPanel.add(homeworkButton);
-        eastPanel.add(tableButton);
+        
+
         
         p.setLayout(new BorderLayout());
         p.add(westPanel, BorderLayout.WEST);
         p.add(eastPanel, BorderLayout.EAST);
 
         
+        
+        /*
         // Add components to the frame
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(scrollPane, BorderLayout.CENTER);
         getContentPane().add(p, BorderLayout.NORTH);
+        */
+        
+        
+        JTabbedPane tabbedPane = new JTabbedPane();
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout());
+        panel1.add(scrollPane, BorderLayout.CENTER);
+        panel1.add(p, BorderLayout.NORTH);
+        
+        
+        tabbedPane.addTab("Entry", panel1);
+        //tabbedPane.addTab("Tab2", new JPanel());
+        tabbedPane.setTabPlacement(JTabbedPane.LEFT); 
+        getContentPane().add(tabbedPane);
+        
+        
+        HomeworkViewer homeworkViewer = new HomeworkViewer(NoteHandler.getNotesStringArray());
+        TimetableViewer timetableViewer = new TimetableViewer(table);
+
+        JPanel homeworkPanel = new JPanel();
+        homeworkPanel.add(homeworkViewer);
+
+        JPanel timetablePanel = new JPanel();
+        timetablePanel.add(timetableViewer);
+
+        tabbedPane.addTab("Homework", homeworkPanel);
+        tabbedPane.addTab("Timetable", timetablePanel);
+        tabbedPane.addTab("Settings", Settings.getSettingsComponent());
+
+        
+        
+        JButton homeworkButton = new JButton("View Homework");
+        JButton tableButton = new JButton("Edit Schedule");
+        
+        homeworkButton.addActionListener(new ActionListener(){ 
+      	  public void actionPerformed(ActionEvent e){ 
+//      		HomeworkViewer v = new HomeworkViewer(NoteHandler.getNotesStringArray());
+      		
+      		
+      			tabbedPane.setSelectedIndex(1);
+
+      		  
+      	  }});
+        tableButton.addActionListener(new ActionListener(){ 
+        	  public void actionPerformed(ActionEvent e){ 
+//        		  new TimetableViewer(table);
+        		  
+        		  tabbedPane.setSelectedIndex(2);
+        		  //new TimetableViewer(NoteHandler.getTable());
+        	  }});
+        
+        eastPanel.setLayout(new GridLayout(1,2));
+        eastPanel.add(homeworkButton);
+        eastPanel.add(tableButton);
+        
         
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
