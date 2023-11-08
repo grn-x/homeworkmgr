@@ -76,7 +76,8 @@ public class HomeworkViewer extends JPanel {
     private DefaultTableModel tableModel;
     private JComboBox<String> dropdown;
     private HashSet<String> options;
-    
+    public double preferredWidthModifier = 1;
+
     
     public HomeworkViewer(ArrayList<Object[]> arrList) {
 
@@ -97,9 +98,17 @@ public class HomeworkViewer extends JPanel {
         
         String[] columnNames = {"Subject", "Time", "Note", "Status"};
         tableModel = new DefaultTableModel(columnNames, 0);
-        table = new JTable(tableModel);
-
+        table = new JTable(tableModel){
+            @Override
+            public boolean getScrollableTracksViewportWidth() {
+                return getPreferredSize().width < getParent().getWidth();
+            }
+        };
+        
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        //        table.setPreferredSize(new Dimension(1000, getPreferredSize().height));
+        
         
         for (Object[] rowData : arrList) {
             tableModel.addRow(rowData);
@@ -334,8 +343,19 @@ public class HomeworkViewer extends JPanel {
         
         
         JScrollPane scrollPane = new JScrollPane(table);
-        table.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        scrollPane.setPreferredSize(new Dimension(600, 400));
+//        table.setPreferredScrollableViewportSize(new Dimension(600, 400));
+//        scrollPane.setPreferredSize(new Dimension(600, 400));
+        /*scrollPane.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+            	System.out.println(table.getSize() +" "+ table.getPreferredSize());
+                int newWidth = (int) (table.getSize().width * preferredWidthModifier);
+//                table.setPreferredScrollableViewportSize(new Dimension(newWidth, table.getPreferredScrollableViewportSize().height));
+                table.setPreferredSize(new Dimension(newWidth, table.getSize().height));
+                scrollPane.revalidate();
+            }
+        });*/
+
         add(scrollPane, BorderLayout.CENTER);
 //        setSize(600, 400);
 //        setLocationRelativeTo(null);
@@ -384,7 +404,23 @@ public class HomeworkViewer extends JPanel {
                  return c;
             };
         });
+        
+        new Thread(() -> {
+            while (table.getSize().width == 0 || table.getSize().height == 0) {
+                // Nothing
+            }
+            System.out.println(table.getSize());
+            System.out.println(table.getPreferredSize());
+            int columnCount = table.getColumnModel().getColumnCount();
+            int preferredWidth = (int) Math.round(table.getSize().width * preferredWidthModifier / columnCount);
+            for (int i = 0; i < columnCount; i++) {
+                TableColumn column = table.getColumnModel().getColumn(i);
+                column.setPreferredWidth(preferredWidth);
+            }
+            System.out.println(table.getPreferredSize());
 
+        }).start();
+      
     }
     
   

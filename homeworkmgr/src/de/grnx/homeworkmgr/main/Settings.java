@@ -201,6 +201,7 @@
 
 
 package de.grnx.homeworkmgr.main;
+//TODO add setting for homework viewer preferred width modifier
 
 import java.io.*;
 import java.util.HashMap;

@@ -147,14 +147,11 @@ public class Popup extends JFrame {
         HomeworkViewer homeworkViewer = new HomeworkViewer(NoteHandler.getNotesStringArray());
         TimetableViewer timetableViewer = new TimetableViewer(table);
 
-        JPanel homeworkPanel = new JPanel();
-        homeworkPanel.add(homeworkViewer);
+        
 
-        JPanel timetablePanel = new JPanel();
-        timetablePanel.add(timetableViewer);
 
-        tabbedPane.addTab("Homework", homeworkPanel);
-        tabbedPane.addTab("Timetable", timetablePanel);
+        tabbedPane.addTab("Homework", homeworkViewer);
+        tabbedPane.addTab("Timetable", timetableViewer);
         tabbedPane.addTab("Settings", Settings.getSettingsComponent());
 
         

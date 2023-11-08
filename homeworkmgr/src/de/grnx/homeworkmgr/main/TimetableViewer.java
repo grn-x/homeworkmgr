@@ -20,11 +20,11 @@ public class TimetableViewer extends JPanel {
 
     public TimetableViewer(String[][] arr) {
 
-        JTabbedPane tPane = new JTabbedPane();
+//        JTabbedPane tPane = new JTabbedPane();
 
-        JPanel panel1 = new JPanel();
+//        JPanel panel1 = new JPanel();
 
-        tPane.addTab("Schedule", panel1);
+//        tPane.addTab("Schedule", panel1);
 
         //setTitle("Timetable Viewer");
 //        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -37,8 +37,8 @@ public class TimetableViewer extends JPanel {
         };
 
         JScrollPane scrollPane = new JScrollPane(timetable);
-        panel1.setLayout(new BorderLayout());
-        panel1.add(scrollPane, BorderLayout.CENTER);
+        setLayout(new BorderLayout());
+        add(scrollPane, BorderLayout.CENTER);
 
         loadARRData(arr);
         timetable.getTableHeader().setReorderingAllowed(false);
@@ -53,7 +53,7 @@ public class TimetableViewer extends JPanel {
             if (!(file == null)) {
                 Serializer.serializeObject(file.toString(), tableToNestedArray(timetable));
                 Main.SETTINGS.setTableLocation(file);
-                Popup.displayNotification(tPane, "Saved", 500);
+                Popup.displayNotification(this, "Saved", 500);
 
             }
         });
@@ -75,17 +75,11 @@ public class TimetableViewer extends JPanel {
         buttonPanel.add(buttonLoad);
         buttonPanel.add(buttonReset);
 
-        panel1.add(buttonPanel, BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
 
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                // Implement resizing behavior here if necessary
-                revalidate();
-                repaint();
-            }
-        });
+     
         
-        add(panel1);
+//        add(panel1);
 
 //        pack();
 //        setLocationRelativeTo(null); // Center the frame on the screen
