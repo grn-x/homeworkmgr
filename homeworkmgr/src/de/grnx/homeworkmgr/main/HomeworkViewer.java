@@ -76,7 +76,7 @@ public class HomeworkViewer extends JPanel {
     private DefaultTableModel tableModel;
     private JComboBox<String> dropdown;
     private HashSet<String> options;
-    public double preferredWidthModifier = 1;
+    public double preferredWidthModifier;
 
     
     public HomeworkViewer(ArrayList<Object[]> arrList) {
@@ -84,7 +84,20 @@ public class HomeworkViewer extends JPanel {
 //        setTitle("Homework Viewer");
 //        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        
+    	if(Main.SETTINGS.getAdditionalSettings("Scaling factor for preferred HomeworkViewer cell width")==null||Main.SETTINGS.getAdditionalSettings("Scaling factor for preferred HomeworkViewer cell width").isBlank()) {
+    		Main.SETTINGS.addAdditionalSettings("Scaling factor for preferred HomeworkViewer cell width", "1");
+		}else {
+			Main.SETTINGS.addAdditionalSettings("Scaling factor for preferred HomeworkViewer cell width", Main.SETTINGS.getAdditionalSettings("Scaling factor for preferred HomeworkViewer cell width"));
+			try {
+				preferredWidthModifier = Double.valueOf(Main.SETTINGS.getAdditionalSettings("Scaling factor for preferred HomeworkViewer cell width"));
+			}catch(Exception e) {
+				e.printStackTrace();
+				ErrView.showStackTraceErrorDialog(null, "\"Scaling factor for preferred HomeworkViewer cell width\" Setting could not be parsed, Double Expected", e);
+				preferredWidthModifier = 1;
+			}
+				
+		}
+
         setLayout(new BorderLayout());
         //add(this,BorderLayout.CENTER);
         

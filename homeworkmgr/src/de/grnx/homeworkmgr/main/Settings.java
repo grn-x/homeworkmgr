@@ -203,6 +203,7 @@
 package de.grnx.homeworkmgr.main;
 //TODO add setting for homework viewer preferred width modifier
 
+import java.awt.Dimension;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -388,25 +389,28 @@ public class Settings {
         JTextField delayField = new JTextField(String.valueOf(getDelay()));
         delayField.addActionListener(e -> {
             setDelay(Long.parseLong(delayField.getText()));
-            Popup.displayNotification(panel, "Saved", 500);
+            Popup.displayNotification(panel, "Saved; Restart Application to apply Changes", 1000);
         });
         panel.add(delayField);
+                            addSeparator(panel);
 
         panel.add(new JLabel("Data Location:"));
         JTextField dataLocationField = new JTextField(getDataLocation().getAbsolutePath());
         dataLocationField.addActionListener(e -> {
             setDataLocation(new File(dataLocationField.getText()));
-            Popup.displayNotification(panel, "Saved", 500);
+            Popup.displayNotification(panel, "Saved; Restart Application to apply Changes", 1000);
         });
         panel.add(dataLocationField);
+                            addSeparator(panel);
 
         panel.add(new JLabel("Table Location:"));
         JTextField tableLocationField = new JTextField(getTableLocation().getAbsolutePath());
         tableLocationField.addActionListener(e -> {
             setTableLocation(new File(tableLocationField.getText()));
-            Popup.displayNotification(panel, "Saved", 500);
+            Popup.displayNotification(panel, "Saved; Restart Application to apply Changes", 1000);
         });
         panel.add(tableLocationField);
+                            addSeparator(panel);
 
         for (Map.Entry<String, String> entry : AdditionalSettings.entrySet()) {
             panel.add(new JLabel(entry.getKey() + ":"));
@@ -415,12 +419,17 @@ public class Settings {
                 Map<String, String> newAdditionalSettings = new HashMap<>(AdditionalSettings);
                 newAdditionalSettings.put(entry.getKey(), extraField.getText());
                 setAdditionalSettings(newAdditionalSettings);
-                Popup.displayNotification(panel, "Saved", 500);
+                Popup.displayNotification(panel, "Saved; Restart Application to apply Changes", 1000);
             });
             panel.add(extraField);
+            addSeparator(panel);
         }
         return panel;
     }
-
+    private static void addSeparator(JPanel panel) {
+        panel.add(Box.createRigidArea(new Dimension(0, 10))); // add some space
+        panel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        panel.add(Box.createRigidArea(new Dimension(0, 10))); // add some space
+    }
 }
 
