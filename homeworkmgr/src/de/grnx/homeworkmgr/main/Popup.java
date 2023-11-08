@@ -55,6 +55,7 @@ public class Popup extends JFrame {
     	//setUndecorated(true);
         setTitle(Constants.windowTitle + subject);
         setSize(2*512, 2*128);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         

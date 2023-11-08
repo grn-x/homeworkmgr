@@ -201,9 +201,9 @@
 
 
 package de.grnx.homeworkmgr.main;
-//TODO add setting for homework viewer preferred width modifier
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -381,11 +381,11 @@ public class Settings {
     
     }
 
-    // Method to export a JComponent for the UI
+
     public static JComponent getSettingsComponent() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel("Delay:"));
+        panel.add(new JLabel("Delay:")).setFont(panel.getFont().deriveFont(20.0f));
         JTextField delayField = new JTextField(String.valueOf(getDelay()));
         delayField.addActionListener(e -> {
             setDelay(Long.parseLong(delayField.getText()));
@@ -394,7 +394,7 @@ public class Settings {
         panel.add(delayField);
                             addSeparator(panel);
 
-        panel.add(new JLabel("Data Location:"));
+        panel.add(new JLabel("Data Location:")).setFont(panel.getFont().deriveFont(20.0f));
         JTextField dataLocationField = new JTextField(getDataLocation().getAbsolutePath());
         dataLocationField.addActionListener(e -> {
             setDataLocation(new File(dataLocationField.getText()));
@@ -403,7 +403,7 @@ public class Settings {
         panel.add(dataLocationField);
                             addSeparator(panel);
 
-        panel.add(new JLabel("Table Location:"));
+        panel.add(new JLabel("Table Location:")).setFont(panel.getFont().deriveFont(20.0f));
         JTextField tableLocationField = new JTextField(getTableLocation().getAbsolutePath());
         tableLocationField.addActionListener(e -> {
             setTableLocation(new File(tableLocationField.getText()));
@@ -413,8 +413,8 @@ public class Settings {
                             addSeparator(panel);
 
         for (Map.Entry<String, String> entry : AdditionalSettings.entrySet()) {
-            panel.add(new JLabel(entry.getKey() + ":"));
-            JTextField extraField = new JTextField(entry.getValue());
+        	panel.add(new JLabel(entry.getKey() + ":")).setFont(panel.getFont().deriveFont(20.0f));
+        	JTextField extraField = new JTextField(entry.getValue());
             extraField.addActionListener(e -> {
                 Map<String, String> newAdditionalSettings = new HashMap<>(AdditionalSettings);
                 newAdditionalSettings.put(entry.getKey(), extraField.getText());
@@ -424,12 +424,15 @@ public class Settings {
             panel.add(extraField);
             addSeparator(panel);
         }
-        return panel;
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(8); // Set scrolling speed
+        return scrollPane;
+        
     }
     private static void addSeparator(JPanel panel) {
-        panel.add(Box.createRigidArea(new Dimension(0, 10))); // add some space
+        panel.add(Box.createRigidArea(new Dimension(0, 13))); 
         panel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        panel.add(Box.createRigidArea(new Dimension(0, 10))); // add some space
+        panel.add(Box.createRigidArea(new Dimension(0, 13)));
     }
 }
 

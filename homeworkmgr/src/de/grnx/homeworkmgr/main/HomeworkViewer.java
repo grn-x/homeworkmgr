@@ -43,6 +43,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.w3c.dom.traversal.DocumentTraversal;
 
@@ -63,6 +64,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Objects;
@@ -77,6 +79,8 @@ public class HomeworkViewer extends JPanel {
     private JComboBox<String> dropdown;
     private HashSet<String> options;
     public double preferredWidthModifier;
+    public static String allSelectedOptions ="";
+    public static TableRowSorter<DefaultTableModel> sorter;
 
     
     public HomeworkViewer(ArrayList<Object[]> arrList) {
@@ -131,6 +135,12 @@ public class HomeworkViewer extends JPanel {
         JComboBox<String> comboBox = new JComboBox<>(statusOptions);
         comboBox.setEditable(true);
         
+        comboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                System.out.println("All items in the combobox: " + comboBox.getName());
+            }
+        });
         
         TableColumn statusColumn = table.getColumnModel().getColumn(3);
         statusColumn.setCellEditor(new DefaultCellEditor(comboBox));
@@ -374,6 +384,19 @@ public class HomeworkViewer extends JPanel {
 //        setLocationRelativeTo(null);
         setVisible(true);
         
+         sorter = new TableRowSorter<>(tableModel);
+
+        sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                String value = entry.getStringValue(3); // 4th cell value
+                //System.out.println(value);
+                //System.out.println(allSelectedOptions);
+                return allSelectedOptions.contains(value);
+            }
+        });
+
+        table.setRowSorter(sorter);
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
         	 @Override
              public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -418,24 +441,35 @@ public class HomeworkViewer extends JPanel {
             };
         });
         
-        new Thread(() -> {
+        /*new Thread(() -> {
             while (table.getSize().width == 0 || table.getSize().height == 0) {
                 // Nothing
             }
-            System.out.println(table.getSize());
-            System.out.println(table.getPreferredSize());
+            //System.out.println(table.getSize());
+            //System.out.println(table.getPreferredSize());
             int columnCount = table.getColumnModel().getColumnCount();
             int preferredWidth = (int) Math.round(table.getSize().width * preferredWidthModifier / columnCount);
             for (int i = 0; i < columnCount; i++) {
                 TableColumn column = table.getColumnModel().getColumn(i);
                 column.setPreferredWidth(preferredWidth);
             }
-            System.out.println(table.getPreferredSize());
+            //System.out.println(table.getPreferredSize());
 
-        }).start();
+        }).start();*/
       
     }
     
+    public static void updateSorter() {
+        SwingUtilities.invokeLater(() -> {
+            sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
+                @Override
+                public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                    String value = entry.getStringValue(3); // 4th cell value
+                    return allSelectedOptions.contains(value);
+                }
+            });
+        });
+    }
   
 //    private void updateSelectedCell(String text) {
 //        int selectedRow = table.getSelectedRow();
@@ -458,9 +492,7 @@ public class HomeworkViewer extends JPanel {
         int noteColumnIndex = 2; // Note column index
         table.setValueAt(text, row, noteColumnIndex);
     }
-    
-    //aded
-    
+        
     
     private Object[] getRowData(int rowIndex) {
         Vector<?> rowData = (Vector<?>) tableModel.getDataVector().elementAt(rowIndex);
@@ -479,6 +511,8 @@ public class HomeworkViewer extends JPanel {
     }
     
     private void saveHomeworkState(JTable table) {
+    	sorter.setRowFilter(null);
+    	updateSorter();
 		  ArrayList<EnSt> exList = new ArrayList<EnSt>();
 		  for(int i =0; i<table.getRowCount();i++) {
 //			  EnSt entry = new EnSt();
@@ -494,7 +528,7 @@ public class HomeworkViewer extends JPanel {
 				    table.getValueAt(i, 2) != null ? table.getValueAt(i, 2).toString() : "",
 				    table.getValueAt(i,3) != null?table.getValueAt(i, 3).toString():"Pending"
 				));
-			
+			System.out.println(exList.get(i).toString());
 				Popup.displayNotification(table, "Saved", 500);
 			  }catch (Exception e1) {
 				  	e1.printStackTrace();
@@ -675,7 +709,10 @@ protected void updateItem(int index) {
     item.setSelected(!item.isSelected());
     setSelectedIndex(-1);
     setSelectedItem(item);
-    System.out.println("combobox action");
+    //System.out.println(getCheckedItemString(dataModel));
+    HomeworkViewer.allSelectedOptions=getCheckedItemString(dataModel);
+    
+    HomeworkViewer.updateSorter();
 
   }
 }
