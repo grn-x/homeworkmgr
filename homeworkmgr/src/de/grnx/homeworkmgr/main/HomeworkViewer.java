@@ -441,9 +441,14 @@ public class HomeworkViewer extends JPanel {
             };
         });
         
-        /*new Thread(() -> {
+        new Thread(() -> {
             while (table.getSize().width == 0 || table.getSize().height == 0) {
-                // Nothing
+            			//jvm optimiert diesen loop weg? deswegen sleep
+            	try {
+            		Thread.sleep(10);
+            	}catch(Exception e) {
+            		//kein print oder errview weil ein fehler hier hoffentlich nicht so gravierend ist
+            	}
             }
             //System.out.println(table.getSize());
             //System.out.println(table.getPreferredSize());
@@ -455,7 +460,7 @@ public class HomeworkViewer extends JPanel {
             }
             //System.out.println(table.getPreferredSize());
 
-        }).start();*/
+        }).start();
       
     }
     
