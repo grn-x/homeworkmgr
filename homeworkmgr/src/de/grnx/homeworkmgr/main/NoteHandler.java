@@ -43,10 +43,14 @@ public class NoteHandler {
 	
 	public static ArrayList<Object[]> getNotesStringArray(){
 		//return ((ArrayList<EnSt>) Serializer.deserializeObject(Settings.getDataLocation().getAbsolutePath())).stream().map(EnSt::toArray).collect(ArrayList<Object[]>::new, ArrayList::add, ArrayList::addAll)
-		return ((ArrayList<EnSt>) Serializer.deserializeObject(Settings.getDataLocation().getAbsolutePath()))
+		try{return ((ArrayList<EnSt>) Serializer.deserializeObject(Settings.getDataLocation().getAbsolutePath()))
 			    .stream()
 			    .map(EnSt::getStringArray)
 			    .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ArrayList<Object[]>();
+		}
 	}
 	
 	public static String getNotesString(){
