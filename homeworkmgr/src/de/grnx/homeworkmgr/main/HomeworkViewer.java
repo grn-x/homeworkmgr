@@ -243,7 +243,23 @@ public class HomeworkViewer extends JPanel {
         
         saveButton.addActionListener(new ActionListener() { 
       	  public void actionPerformed(ActionEvent e) {
-              saveHomeworkState(table);
+      		sorter.setRowFilter(null);
+        	updateSorter();
+        	
+        	
+//              saveHomeworkState(table);
+        	
+        	
+  		  for(int i =0; i<table.getRowCount();i++) {
+  			  System.out.println("\n\n");
+  			  System.out.println("Values at row :" +i);
+  			  System.out.println(table.getValueAt(i, 0));
+  			  System.out.print(table.getValueAt(i, 1));
+  			  System.out.print(table.getValueAt(i, 2));
+  			  System.out.print(table.getValueAt(i, 3));
+
+  		  }
+        	
 
       	  }});
         
@@ -516,8 +532,7 @@ public class HomeworkViewer extends JPanel {
     }
     
     private void saveHomeworkState(JTable table) {
-    	sorter.setRowFilter(null);
-    	updateSorter();
+    	
 		  ArrayList<EnSt> exList = new ArrayList<EnSt>();
 		  for(int i =0; i<table.getRowCount();i++) {
 //			  EnSt entry = new EnSt();
